@@ -44,3 +44,5 @@ simple.war
 url.txt
 webpack.config.js
 webpack.generated.js
+
+src/main/resources/static/built

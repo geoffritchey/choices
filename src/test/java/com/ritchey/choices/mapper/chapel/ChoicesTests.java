@@ -2,6 +2,7 @@ package com.ritchey.choices.mapper.chapel;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.sql.Connection;
@@ -11,7 +12,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -64,7 +67,14 @@ class SimpleMapperTests {
 			e.printStackTrace();
 		}
         
-        sessionFactory = builder.build(reader);
+        Properties properties = new Properties();
+        try {
+            properties.load(new FileInputStream("build.properties"));
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        
+		sessionFactory = builder.build(reader, properties);
    
         session = sessionFactory.openSession(false);
         con = session.getConnection();
@@ -179,19 +189,37 @@ class SimpleMapperTests {
 	 * @throws ParseException 
 	 */
 	@Test
-	public void updateLeaderChoice() throws ParseException {
+	public void updateLeaderChoice() {
 		SplitByLeaderMapper mapper = session.getMapper(SplitByLeaderMapper.class);
-		mapper.updateByPeopleIdAndLabel("000000000", "leader label");
+		int x = mapper.updateByPeopleIdAndLabel("000000000", "leader label");
+		assertTrue(x==0);
 	}
 	
 	/**
 	 * mvn test -Dtest=SimpleMapperTests#insertLeaderChoice
 	 * @throws ParseException
+	 * @throws SQLException 
 	 */
 	@Test
 	public void insertLeaderChoice() throws ParseException {
+		try {
+			conRun(con, "insert into person (people_id) values ('000000000');"
+					+ "  insert into leaders(label, endTerm, active) values ('leader label', '1979-01-01', 1);");
+		} catch (SQLException e1) {
+			assertTrue(false);
+			e1.printStackTrace();
+		}
 		SplitByLeaderMapper mapper = session.getMapper(SplitByLeaderMapper.class);
-		mapper.insertByPeopleIdAndLabel("000000000", "leader label", df.parse("2020-01-01"));
+		int x = mapper.insertByPeopleIdAndLabel("000000000", "leader label", df.parse("2020-01-01"));
+		assertTrue(x==1);
+		boolean exception = false;
+		try {
+			x = mapper.insertByPeopleIdAndLabel("000000000", "leader label", df.parse("2020-01-01"));
+		} catch (PersistenceException e) {
+			LOGGER.debug("EXCEPTION e = " + e);
+			exception = true;
+		}
+		assertTrue(exception, "should get a duplicate key violation");
 	}
 
 	
