@@ -1,5 +1,6 @@
 package com.ritchey.choices.mapper.chapel;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -99,9 +100,12 @@ public interface SplitByLeaderMapper {
     int updateByPrimaryKey(SplitByLeader record);
     
     int updateByPeopleIdAndLabel(@Param("peopleId") String peopleId, @Param("label") String label);
-    int insertByPeopleIdAndLabel(@Param("peopleId") String peopleId, @Param("label") String label);
+    int insertByPeopleIdAndLabel(@Param("peopleId") String peopleId, @Param("label") String label, @Param("endTerm") Date endTerm);
     
     List<String> selectLeaders(String string);
     List<Leaders> selectLeadersList(@Param("filter") String filter, @Param("active") Boolean activeOnly, RowBounds r);
     Integer selectLeadersListCount(@Param("filter") String filter, @Param("active") Boolean activeOnly);
+    
+	int updateByPeopleIdLeaderIdEndTerm(@Param("peopleId") String people_id, @Param("leaderId") int leaderid, @Param("endTerm") Date endTerm);
+
 }

@@ -265,25 +265,27 @@
   
   <insert id="insertByPeopleIdAndLabel" parameterType="java.util.HashMap" >
    insert into split_by_leader(personId, endTerm, leaderId)
- select p.id as personId, l.endTerm as endTerm, l.id as leaderId
+ select p.id as personId, #{endTerm, jdbcType=DATE} as endTerm, l.id as leaderId
  from person p 
-	cross join leaders l 
+	left join leaders l on l.label = #{label,jdbcType=VARCHAR} and l.active = 1
  where 1=1 
 	and p.people_id = #{peopleId,jdbcType=VARCHAR}
-	and l.label = #{label,jdbcType=VARCHAR}
-	and l.endTerm > getDate()
+	and l.label is not null
   </insert>
   
   <update id="updateByPeopleIdAndLabel" parameterType="java.util.HashMap" >
- update split_by_leader set leaderId = l.id
-/*select people_id, leaderId, lastName, firstName, l.label, l.id */
-from split_by_leader sbl
-	join person p on p.id = sbl.personId
-	cross join leaders l
-where 1=1
-	and p.people_id = #{peopleId,jdbcType=VARCHAR}
-	and sbl.endTerm > getDate() 
-	and l.label = #{label,jdbcType=VARCHAR}
+update split_by_leader set leaderId = (select l.id
+	from  leaders l 
+	where 1=1
+			and l.label = #{label,jdbcType=VARCHAR}) 
+where split_by_leader.id = (select sbl.id
+	from split_by_leader sbl
+			join person p on p.id = sbl.personId
+			join leaders l on l.id = sbl.leaderId
+	where 1=1
+			and p.people_id =  #{peopleId,jdbcType=VARCHAR}
+			and sbl.endTerm > dbo.getCurrentDate()
+			and l.label = #{label,jdbcType=VARCHAR})
   </update>
   
    <select id="selectLeaders" resultType="java.lang.String" >
@@ -320,5 +322,6 @@ where 1=1
  and label like #{filter,jdbcType=VARCHAR}
 </if>
  </select>
- 
+
+	
 </mapper>

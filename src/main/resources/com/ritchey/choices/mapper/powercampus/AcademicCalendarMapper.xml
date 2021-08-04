@@ -696,4 +696,13 @@
       and ACADEMIC_TERM = #{academicTerm,jdbcType=VARCHAR}
       and ACADEMIC_SESSION = #{academicSession,jdbcType=VARCHAR}
   </update>
+  
+  	<select id="selectCurrentStartDate" resultType="map">
+<![CDATA[
+select min(start_date) as startTerm, max(end_date) as endTerm
+from academiccalendar 
+where end_date > getDate() and start_date < getDate() + 20
+]]>
+	</select>
+
 </mapper>

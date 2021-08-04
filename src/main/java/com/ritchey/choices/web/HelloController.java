@@ -1,6 +1,7 @@
 package com.ritchey.choices.web;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -34,5 +35,12 @@ public class HelloController {
 		ListCount<Map> tardies = service.getTardies(campusId, term, 0, 100);
 		ret.setTardy(tardies);
 		return ret;
+	}
+	
+	@RequestMapping("/leaders")
+	public List<Map> leaders() {
+		
+		List<Map> leaders = service.getMentors();
+		return leaders;
 	}
 }

@@ -105,5 +105,9 @@ public interface LeadersMapper {
     List<Map> selectActiveLeaders(@Param("maxSeatCount") Integer maxSeatCount);
     
     Integer selectIsSplitByMentor();
+    
+    Integer selectSeatCount();
 
+
+	
 }

@@ -1,6 +1,7 @@
 package com.ritchey.choices.mapper.powercampus;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -96,4 +97,6 @@ public interface AcademicCalendarMapper {
      * @mbggenerated Wed Sep 04 11:08:45 CDT 2013
      */
     int updateByPrimaryKey(AcademicCalendar record);
+    
+	Map<String, Object> selectCurrentStartDate();
 }

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +20,12 @@ import com.ritchey.choices.domain.powercampus.AcademicCalendar;
 import com.ritchey.choices.domain.powercampus.AcademicCalendarExample;
 import com.ritchey.choices.mapper.chapel.ChapelPersonMapper;
 import com.ritchey.choices.mapper.chapel.ExemptionsMapper;
+import com.ritchey.choices.mapper.chapel.LeadersMapper;
 import com.ritchey.choices.mapper.chapel.PunchMapper;
+import com.ritchey.choices.mapper.chapel.SplitByLeaderMapper;
 import com.ritchey.choices.mapper.powercampus.AcademicCalendarMapper;
+
+import jdk.internal.org.jline.utils.Log;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
@@ -40,6 +43,12 @@ public class GreetingService {
     
     @Autowired
     private PunchMapper punchMapper;
+    
+    @Autowired
+    private LeadersMapper leadersMapper;
+    
+    @Autowired
+    private SplitByLeaderMapper splitByLeaderMapper;
  
     public List<AcademicCalendar> getCurrentTerms() throws Exception {
     	Date now = new Date();
@@ -169,5 +178,24 @@ public class GreetingService {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	
+	public List<Map> getMentors() {
+		if (0==leadersMapper.selectIsSplitByMentor()) {
+			return null;
+		}
+		return leadersMapper.selectActiveLeaders(leadersMapper.selectSeatCount());
+	}
+	
+	
+	public int updateMentor(String people_id, int leaderid) {
+		Map<String, Object> x = calendar.selectCurrentStartDate();
+		if (x == null || x.get("endTerm") == null) {
+			Log.debug("Could not get current end of term");
+			return 0;
+		}
+		Date endTerm = (Date) x.get("endTerm");
+		return splitByLeaderMapper.updateByPeopleIdLeaderIdEndTerm(people_id, leaderid, endTerm);
 	}
 }

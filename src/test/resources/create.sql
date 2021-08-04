@@ -64,6 +64,21 @@ CREATE TABLE leaders(
 	active tinyint NOT NULL
 );
 
+drop table if exists person;
+create table person (
+	id bigint IDENTITY(1,1) primary key,
+	version int NOT NULL,
+	people_id varchar(9) NOT NULL,
+	lastName varchar(60) NULL,
+	firstName varchar(60) NULL,
+	middleName varchar(60) NULL,
+	currentStudent tinyint NOT NULL,
+	exempt int NOT NULL,
+	comment varchar(500) NULL,
+	email varchar(320) NULL
+);
+
+
 drop alias if exists dbo.getCurrentDate;
 create alias if not exists dbo.getCurrentDate as '
     java.util.Date getDate() {

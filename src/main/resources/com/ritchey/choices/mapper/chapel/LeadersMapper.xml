@@ -331,4 +331,20 @@ from scheduledEvent
 where 1=1
 	and splitByInstructor = 1
   </select>
+  
+      <select  id="selectSeatCount" resultType="Integer">
+with pcount as (
+select count(*) as count
+from person
+where currentStudent = 1
+), 
+lcount as (
+select count(*) as count
+from leaders 
+where active = 1
+)
+select case when (cast(coalesce(properties.strvalue, 0) as int) > pcount.count/lcount.count+1) then cast(coalesce(properties.strvalue, 0) as int)
+else pcount.count/lcount.count+1 end
+from pcount cross join lcount left join properties on properties.keyValue = 'SEAT_COUNT'
+  </select>
 </mapper>
