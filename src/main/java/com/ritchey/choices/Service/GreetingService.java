@@ -25,8 +25,6 @@ import com.ritchey.choices.mapper.chapel.PunchMapper;
 import com.ritchey.choices.mapper.chapel.SplitByLeaderMapper;
 import com.ritchey.choices.mapper.powercampus.AcademicCalendarMapper;
 
-import jdk.internal.org.jline.utils.Log;
-
 @Service
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 public class GreetingService {
@@ -192,7 +190,7 @@ public class GreetingService {
 	public int updateMentor(String people_id, int leaderid) {
 		Map<String, Object> x = calendar.selectCurrentStartDate();
 		if (x == null || x.get("endTerm") == null) {
-			Log.debug("Could not get current end of term");
+			LOGGER.debug("Could not get current end of term");
 			return 0;
 		}
 		Date endTerm = (Date) x.get("endTerm");
