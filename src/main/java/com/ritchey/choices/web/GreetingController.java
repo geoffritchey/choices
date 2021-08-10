@@ -64,9 +64,10 @@ public class GreetingController {
 			    LdapUserDetails ldap = ((LdapUserDetails) authentication.getPrincipal());
 			    campusId = peopleId = ldap.getEmployeeId();
 			    LOGGER.debug("people id = " + peopleId);
+			    
 			}
 			else {
-					return "hello";
+					return "You could not be found in the system.";
 				}
 		}
 
@@ -74,7 +75,7 @@ public class GreetingController {
 		
 		campusId = peopleId;
 		if (person == null) {
-			return "hello";
+			return "You could not be found in the system.";
 		}
 		fullname = person.getFirstname() + " " + person.getLastname();
 			

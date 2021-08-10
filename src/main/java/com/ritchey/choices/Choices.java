@@ -31,16 +31,14 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @MapperScan(basePackages = "com.ritchey.choices.mapper.powercampus", sqlSessionTemplateRef="powercampusSqlSessionTemplate")
 @SpringBootApplication(exclude={SolrAutoConfiguration.class})
 public class Choices  {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationErrorListener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Choices.class);
     
 	static public String version = "77777";
 
         
 	public static void main(String[] args) throws NamingException {
 		SpringApplication application = new SpringApplication(Choices.class);
-		application.addListeners(new ApplicationPidFileWriter());
-		application.addListeners(new ApplicationErrorListener());
-		application.addListeners(new ApplicationShutdown());
+
 		ApplicationContext ctx = application.run();
 
 		System.err.println("Let's inspect the beans provided by Spring Boot:");

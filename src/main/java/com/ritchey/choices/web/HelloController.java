@@ -4,9 +4,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,5 +47,12 @@ public class HelloController {
 		
 		List<Map> leaders = service.getMentors();
 		return leaders;
+	}
+	
+	@PostMapping(path= "/leaders/{id}", consumes = "application/json", produces = "application/json")
+    public Integer leaders(@PathVariable("id") Integer leaderId, HttpServletRequest request, ModelMap modelMap) {
+		String peopleId = (String) modelMap.getAttribute("campusId");
+		service.updateMentor(peopleId, leaderId);
+		return 1;
 	}
 }

@@ -9,8 +9,9 @@ function App() {
   const [appState, setAppState] = useState({
     loading: false,
     repos: null,
+    selectedId: 1,
   });
-
+ 
   useEffect(() => {
     setAppState({ loading: true });
     const apiUrl = `http://localhost:8080/choices/leaders`;
@@ -26,7 +27,7 @@ function App() {
         <h1>Chapel Choices</h1>
       </div>
       <div className='repo-container'>
-        <ListLoading isLoading={appState.loading} repos={appState.repos} />
+        <ListLoading post={(event)=>handleSubmit(event)} selected={appState.selectedId} isLoading={appState.loading} repos={appState.repos} />
       </div>
       <footer>
         <div className='footer'>
@@ -35,6 +36,13 @@ function App() {
     </div>
   );
 }
+
+  function handleSubmit(event) {
+    alert('A name was submitted: ' + this.state.value);
+    event.preventDefault();
+  }
+
+
 export default App;
 
 
