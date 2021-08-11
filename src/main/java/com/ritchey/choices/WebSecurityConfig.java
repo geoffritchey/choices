@@ -36,6 +36,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.defaultSuccessUrl("/greeting", true)
 				.permitAll()
 				.and()
+			.csrf()
+				.disable()	
+				.cors()
+				.and()
 			.logout()
 				.permitAll();
 			

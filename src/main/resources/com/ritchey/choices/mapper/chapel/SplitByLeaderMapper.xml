@@ -263,21 +263,18 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   
-  <insert id="insertByPeopleIdAndLabel" parameterType="java.util.HashMap" >
+  <insert id="insertByPeopleIdAndLeaderId" parameterType="java.util.HashMap" >
    insert into split_by_leader(personId, endTerm, leaderId)
  select p.id as personId, #{endTerm, jdbcType=DATE} as endTerm, l.id as leaderId
  from person p 
-	left join leaders l on l.label = #{label,jdbcType=VARCHAR} and l.active = 1
+	left join leaders l on l.id = #{leaderId,jdbcType=VARCHAR} and l.active = 1
  where 1=1 
 	and p.people_id = #{peopleId,jdbcType=VARCHAR}
 	and l.label is not null
   </insert>
   
-  <update id="updateByPeopleIdAndLabel" parameterType="java.util.HashMap" >
-update split_by_leader set leaderId = (select l.id
-	from  leaders l 
-	where 1=1
-			and l.label = #{label,jdbcType=VARCHAR}) 
+  <update id="updateByPeopleIdAndLeaderId" parameterType="java.util.HashMap" >
+update split_by_leader set leaderId = #{leaderId,jdbcType=VARCHAR}
 where split_by_leader.id = (select sbl.id
 	from split_by_leader sbl
 			join person p on p.id = sbl.personId
@@ -285,7 +282,7 @@ where split_by_leader.id = (select sbl.id
 	where 1=1
 			and p.people_id =  #{peopleId,jdbcType=VARCHAR}
 			and sbl.endTerm > dbo.getCurrentDate()
-			and l.label = #{label,jdbcType=VARCHAR})
+			)
   </update>
   
    <select id="selectLeaders" resultType="java.lang.String" >

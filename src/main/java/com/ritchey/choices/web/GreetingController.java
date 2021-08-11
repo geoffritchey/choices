@@ -56,6 +56,7 @@ public class GreetingController {
 			, Model model) {
 
 		LOGGER.debug("people_id = " + peopleId);
+		request.getSession().setAttribute("campusId", peopleId);
 		if (!peopleId.matches("P?[0-9]{9}")) {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			if (!(authentication instanceof AnonymousAuthenticationToken) && peopleId.equals("")) {

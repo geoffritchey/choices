@@ -10,6 +10,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -191,7 +195,7 @@ class SimpleMapperTests {
 	@Test
 	public void updateLeaderChoice() {
 		SplitByLeaderMapper mapper = session.getMapper(SplitByLeaderMapper.class);
-		int x = mapper.updateByPeopleIdAndLabel("000000000", "leader label");
+		int x = mapper.updateByPeopleIdAndLeaderId("000000000", 1);
 		assertTrue(x==0);
 	}
 	
@@ -202,24 +206,39 @@ class SimpleMapperTests {
 	 */
 	@Test
 	public void insertLeaderChoice() throws ParseException {
+		String endOfTerm = LocalDate.now().plusDays(1).format(DateTimeFormatter.ISO_LOCAL_DATE);
 		try {
-			conRun(con, "insert into person (people_id) values ('000000000');"
-					+ "  insert into leaders(label, endTerm, active) values ('leader label', '1979-01-01', 1);");
+			String script = "SET IDENTITY_INSERT person on; insert into person (id, people_id) values (1, '000000000');SET IDENTITY_INSERT person off;"
+					+ "SET IDENTITY_INSERT leaders on;\n"
+					+ "insert into leaders(id, label, endTerm, active) values (1, 'leader label', '2020-01-01', 1);"
+					+ "insert into leaders(id, label, endTerm, active) values (2, 'leader label 2', '2020-01-01', 1);"
+					+ "SET IDENTITY_INSERT leaders off;\n"
+					+ "insert into split_by_leader(personId, endTerm, leaderId) values (1, '" + 
+						endOfTerm + "', 2);\r\n"
+					+ "";
+			LOGGER.debug("script = " + script);
+			conRun(con, script);
 		} catch (SQLException e1) {
 			assertTrue(false);
 			e1.printStackTrace();
 		}
 		SplitByLeaderMapper mapper = session.getMapper(SplitByLeaderMapper.class);
-		int x = mapper.insertByPeopleIdAndLabel("000000000", "leader label", df.parse("2020-01-01"));
-		assertTrue(x==1);
+		int x;
 		boolean exception = false;
 		try {
-			x = mapper.insertByPeopleIdAndLabel("000000000", "leader label", df.parse("2020-01-01"));
-		} catch (PersistenceException e) {
-			LOGGER.debug("EXCEPTION e = " + e);
+			x = mapper.insertByPeopleIdAndLeaderId("000000000", 2, df.parse(endOfTerm));
+		} catch (Exception e1) {
 			exception = true;
 		}
 		assertTrue(exception, "should get a duplicate key violation");
+		
+		try {
+			x = mapper.updateByPeopleIdAndLeaderId("000000000", 2);
+		} catch (PersistenceException e) {
+			e.printStackTrace();
+			assertTrue(false, "should not have a problem running this query");
+		}
+		
 	}
 
 	

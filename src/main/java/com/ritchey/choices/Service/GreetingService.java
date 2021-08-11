@@ -16,6 +16,7 @@ import com.ritchey.choices.domain.chapel.ChapelPerson;
 import com.ritchey.choices.domain.chapel.ChapelPersonExample;
 import com.ritchey.choices.domain.chapel.Exemptions;
 import com.ritchey.choices.domain.chapel.ExemptionsExample;
+import com.ritchey.choices.domain.chapel.Leaders;
 import com.ritchey.choices.domain.powercampus.AcademicCalendar;
 import com.ritchey.choices.domain.powercampus.AcademicCalendarExample;
 import com.ritchey.choices.mapper.chapel.ChapelPersonMapper;
@@ -187,13 +188,36 @@ public class GreetingService {
 	}
 	
 	
-	public int updateMentor(String people_id, int leaderid) {
+	public String updateMentor(String people_id, int leaderid) {
 		Map<String, Object> x = calendar.selectCurrentStartDate();
 		if (x == null || x.get("endTerm") == null) {
 			LOGGER.debug("Could not get current end of term");
-			return 0;
+			return "Sorry, there was an error.  Could not find the current end of term";
 		}
 		Date endTerm = (Date) x.get("endTerm");
-		return splitByLeaderMapper.updateByPeopleIdLeaderIdEndTerm(people_id, leaderid, endTerm);
+		int count = 0;
+		try {
+			count = splitByLeaderMapper.insertByPeopleIdAndLeaderId(people_id, leaderid, endTerm);
+		} catch (Exception e) {
+			count = splitByLeaderMapper.updateByPeopleIdAndLeaderId(people_id, leaderid);
+		}
+		
+		ChapelPersonExample example = new ChapelPersonExample();
+		example.createCriteria().andPeopleIdEqualTo(people_id);
+		List<ChapelPerson> persons = chapelPersonMapper.selectByExample(example);
+		if (persons.size() == 0) {
+			return "You were not found in the chapel database (people_id = " + people_id + ")";
+		}
+		
+		ChapelPerson person = persons.get(0);
+		if (count > 0) {
+			Leaders leader = leadersMapper.selectByPrimaryKey(leaderid);
+
+			return "Update for " + person.getFirstname() + " " + person.getLastname() + " is in the chapel group for " + leader.getLabel();
+		}
+		return "There was an unknown error updating the leader on the server";
 	}
+	
+	
 }
+

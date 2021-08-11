@@ -99,13 +99,12 @@ public interface SplitByLeaderMapper {
      */
     int updateByPrimaryKey(SplitByLeader record);
     
-    int updateByPeopleIdAndLabel(@Param("peopleId") String peopleId, @Param("label") String label);
-    int insertByPeopleIdAndLabel(@Param("peopleId") String peopleId, @Param("label") String label, @Param("endTerm") Date endTerm);
+    int updateByPeopleIdAndLeaderId(@Param("peopleId") String peopleId, @Param("leaderId") int leaderId);
+    int insertByPeopleIdAndLeaderId(@Param("peopleId") String peopleId, @Param("leaderId") int leaderId, @Param("endTerm") Date endTerm);
     
     List<String> selectLeaders(String string);
     List<Leaders> selectLeadersList(@Param("filter") String filter, @Param("active") Boolean activeOnly, RowBounds r);
     Integer selectLeadersListCount(@Param("filter") String filter, @Param("active") Boolean activeOnly);
     
-	int updateByPeopleIdLeaderIdEndTerm(@Param("peopleId") String people_id, @Param("leaderId") int leaderid, @Param("endTerm") Date endTerm);
 
 }

@@ -1,6 +1,7 @@
 package com.ritchey.choices.web;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,9 +51,21 @@ public class HelloController {
 	}
 	
 	@PostMapping(path= "/leaders/{id}", consumes = "application/json", produces = "application/json")
-    public Integer leaders(@PathVariable("id") Integer leaderId, HttpServletRequest request, ModelMap modelMap) {
-		String peopleId = (String) modelMap.getAttribute("campusId");
-		service.updateMentor(peopleId, leaderId);
-		return 1;
+    public List<Map> leaders(@PathVariable("id") Integer leaderId, HttpServletRequest request, ModelMap modelMap) {
+		Map<String, String> ret = new HashMap<String, String>();
+		ret.put("message", "hi");
+		String peopleId = (String) request.getSession().getAttribute("campusId");
+		if (peopleId == null) {
+			return service.getMentors();
+		}
+		//String peopleId = (String) modelMap.getAttribute("campusId");
+		LOGGER.debug("peopleId = " + peopleId);
+		return service.getMentors();
+	}
+	
+	public String wrap(String message) {
+		return ("{'message': '" + message + "'}").replaceAll("'", "\"");
 	}
 }
+
+
