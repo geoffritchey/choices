@@ -10,11 +10,19 @@ function App() {
     loading: false,
     repos: null,
     selectedId: 1,
+    message: null, 
   });
+  
+  
+  const handleSubmit=(message) => {
+    alert('A name was submitted: ' + message);
+    setAppState({ message: message });
+  }
+  
  
   useEffect(() => {
     setAppState({ loading: true });
-    const apiUrl = `http://localhost:8080/choices/leaders`;
+    const apiUrl = `/choices/leaders`;
     fetch(apiUrl)
       .then((res) => res.json())
       .then((repos) => {
@@ -27,7 +35,8 @@ function App() {
         <h1>Chapel Choices</h1>
       </div>
       <div className='repo-container'>
-        <ListLoading post={(event)=>handleSubmit(event)} selected={appState.selectedId} isLoading={appState.loading} repos={appState.repos} />
+        <ListLoading post={(event)=>handleSubmit(event)} selected={appState.selectedId} message={appState.message}
+                        isLoading={appState.loading} repos={appState.repos} />
       </div>
       <footer>
         <div className='footer'>
@@ -36,11 +45,6 @@ function App() {
     </div>
   );
 }
-
-  function handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.value);
-    event.preventDefault();
-  }
 
 
 export default App;

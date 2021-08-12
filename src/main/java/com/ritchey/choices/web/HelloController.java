@@ -51,16 +51,18 @@ public class HelloController {
 	}
 	
 	@PostMapping(path= "/leaders/{id}", consumes = "application/json", produces = "application/json")
-    public List<Map> leaders(@PathVariable("id") Integer leaderId, HttpServletRequest request, ModelMap modelMap) {
+    public Map leaders(@PathVariable("id") Integer leaderId, HttpServletRequest request, ModelMap modelMap) {
+		String peopleId = (String) request.getSession().getAttribute(GreetingController.CAMPUS_ID_SESSION_KEY);
 		Map<String, String> ret = new HashMap<String, String>();
-		ret.put("message", "hi");
-		String peopleId = (String) request.getSession().getAttribute("campusId");
 		if (peopleId == null) {
-			return service.getMentors();
+			ret.put("label", "Internal Error: campus id is null");
+			return ret;
 		}
-		//String peopleId = (String) modelMap.getAttribute("campusId");
+		String status = service.updateMentor(peopleId, leaderId);
+		ret.put("label", status);
 		LOGGER.debug("peopleId = " + peopleId);
-		return service.getMentors();
+
+		return ret;
 	}
 	
 	public String wrap(String message) {

@@ -6,6 +6,7 @@ class List extends React.Component {
 		super(props);
 		this.state = {value: null};
 	}
+	
 
   	render() {
   		
@@ -46,14 +47,15 @@ class List extends React.Component {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: 'React POST Request Example' })
+        body: JSON.stringify("")
     };
-    const response = await fetch('https://reqres.in/api/posts', requestOptions);
-    const data = await response.json();
-    this.setState({ postId: data.id });
-    
+    fetch('/choices/leaders/' + this.state.value, requestOptions)
+        .then(response => response.json())
+        .then(data => this.props.post(data.label));
     
   }
+  
+
 }
 
 

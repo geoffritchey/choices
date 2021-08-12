@@ -32,6 +32,7 @@ import com.ritchey.choices.domain.chapel.ChapelPerson;
 public class GreetingController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GreetingController.class);
 
+	public static final String CAMPUS_ID_SESSION_KEY = "campusId";
 	
 	Map<String, Date> term = null;
 	String fullname = null;
@@ -64,6 +65,7 @@ public class GreetingController {
 			    String currentUserName = authentication.getName();
 			    LdapUserDetails ldap = ((LdapUserDetails) authentication.getPrincipal());
 			    campusId = peopleId = ldap.getEmployeeId();
+			    request.getSession().setAttribute(CAMPUS_ID_SESSION_KEY, peopleId);
 			    LOGGER.debug("people id = " + peopleId);
 			    
 			}
