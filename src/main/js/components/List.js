@@ -4,7 +4,10 @@ import React from 'react';
 class List extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {value: null};
+		this.state = {
+			value: null,
+			error: false,
+		};
 	}
 	
 
@@ -14,7 +17,7 @@ class List extends React.Component {
   
 	  return (
 	  	<form onSubmit={this.handleSubmit} >
-	      <h2 className='list-head'>Please select an instructor for chapel sessions split out by instructor.</h2>
+	      <h2 className={this.state.error ? 'list-head-error' : 'list-head'}>Please select an instructor for chapel sessions split out by instructor.</h2>
 	      <table>
 	      <tbody>
 	      {this.props.repos.map((repo) => {
@@ -27,7 +30,7 @@ class List extends React.Component {
 	      })}
 	      </tbody>
 	    </table>
-	    <input type="submit" value="Submit" />
+	    <input class="submit-button" type="submit" value="Submit" />
 	    </form> 
 	  );
 	}
@@ -43,6 +46,11 @@ class List extends React.Component {
    handleSubmit=(event) => {
     console.log('A name was submitted: ' + this.state.value);
     event.preventDefault();
+
+	if (this.state.value == null) {
+		this.setState({error: true});
+		return this.render();
+	}
     
     const requestOptions = {
         method: 'POST',

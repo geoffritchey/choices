@@ -9,13 +9,12 @@ function App() {
   const [appState, setAppState] = useState({
     loading: false,
     repos: null,
-    selectedId: 1,
+    selectedId: null,
     message: null, 
   });
   
   
   const handleSubmit=(message) => {
-    alert('A name was submitted: ' + message);
     setAppState({ message: message });
   }
   

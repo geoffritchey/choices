@@ -1,3 +1,21 @@
+.list-head-error {
+	color: red;
+}
+
+.result {
+	font-size: large;
+}
+
+.submit-button {
+	cursor: pointer;
+	margin-top: 1rem;
+	color: white;
+	background-color: #007bff;
+	text-align: center;
+	vertical-align: middle;
+	padding: .375rem .75rem;
+	font-size: 1rem;
+}
 
 html, body {
 	height:200%;
