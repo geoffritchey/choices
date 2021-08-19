@@ -22,6 +22,14 @@
 			Your web browser must have JavaScript enabled in order for this
 			application to display correctly.</div>
 	</noscript>
+	
+	<script>
+    function validate() {
+        var field = document.getElementById("username");
+        field.value = field.value.replace("@lcu.edu", "");
+        return true;
+     }
+	</script>
 
 	<div id="container">
 		<div id="header">
@@ -88,7 +96,7 @@
 		style="left: 567px; top: 443px; visibility: visible; position: absolute; overflow: visible;"
 		class="gwt-DialogBox">
 		<div class="">
-		<form th:action="@{/login}" method="post">
+		<form th:action="@{/login}" method="post" onsubmit="return validate()">
 			<table class="" cellspacing="0" cellpadding="0">
 				<tbody>
 					<tr class="dialogTop">
@@ -138,7 +146,7 @@
 															<td><div class="gwt-Label" style="width: 118px;">User
 																	Name:</div></td>
 															<td><input type="text" class="gwt-TextBox"
-																style="width: 203px;" name="username"></td>
+																style="width: 203px;" name="username" id="username"></td>
 														</tr>
 														<tr>
 															<td><div class="gwt-Label">Password:</div></td>
