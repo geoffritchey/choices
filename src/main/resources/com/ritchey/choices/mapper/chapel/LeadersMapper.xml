@@ -343,8 +343,8 @@ select count(*) as count
 from leaders 
 where active = 1
 )
-select case when (cast(coalesce(properties.strvalue, 0) as int) > pcount.count/lcount.count+1) then cast(coalesce(properties.strvalue, 0) as int)
-else pcount.count/lcount.count+1 end
+select /*case when (cast(coalesce(properties.strvalue, 0) as int) > pcount.count/lcount.count+1) then */ cast(coalesce(properties.strvalue, 0) as int)
+--else pcount.count/lcount.count+1 end
 from pcount cross join lcount left join properties on properties.keyValue = 'SEAT_COUNT'
   </select>
 </mapper>
