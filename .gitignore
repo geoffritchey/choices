@@ -37,13 +37,9 @@ k
 mvnw
 mvnw.cmd
 node_modules/
-package-lock.json
-package.json
 shutdown.sh
 simple.war
 url.txt
-webpack.config.js
-webpack.generated.js
 
 src/main/resources/static/built
 .tern-project
