@@ -28,15 +28,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
-				.antMatchers("/", "/home").authenticated()
-				.antMatchers("/greetingload").permitAll()
-				.antMatchers("/rest").permitAll()
+				.antMatchers("/", "/home", "/greetingload", "/rest").authenticated()
 				.and()
 			.formLogin()
 				.loginPage("/login")
 				.defaultSuccessUrl("/greeting", true)
 				.permitAll()
+				.failureUrl("/login?auth=failure")
 				.and()
+				
 			.csrf()
 				.disable()	
 				.cors()

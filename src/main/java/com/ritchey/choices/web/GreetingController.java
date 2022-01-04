@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,10 +23,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.ritchey.ldap.LdapUserDetails;
 import com.ritchey.choices.Service.GreetingService;
 import com.ritchey.choices.Service.ListCount;
 import com.ritchey.choices.domain.chapel.ChapelPerson;
+import com.ritchey.ldap.LdapUserDetails;
 
 
 @Controller
@@ -70,15 +72,17 @@ public class GreetingController {
 			    
 			}
 			else {
-					return "You could not be found in the system.";
-				}
+				logout(request);
+				return "notFoundDatabase";
+			}
 		}
 
 		ChapelPerson person = service.getChapelPerson(peopleId);
 		
 		campusId = peopleId;
 		if (person == null) {
-			return "You could not be found in the system.";
+			logout(request);
+			return "notFoundDatabase";
 		}
 		fullname = person.getFirstname() + " " + person.getLastname();
 			
@@ -105,6 +109,10 @@ public class GreetingController {
 		
 		
 		return "greeting";
+	}
+	
+	public void logout(HttpServletRequest request) {
+	    new SecurityContextLogoutHandler().logout(request, null, null);
 	}
 
 	

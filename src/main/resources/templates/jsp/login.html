@@ -122,12 +122,7 @@
 															<td style="vertical-align: top;" align="center"><div
 																	class="title-padding">Use your LCU campus email
 																	name (without '@lcu.edu') to login.</div>
-															       <div th:if="${param.error}">
-															            Invalid username and password.
-															        </div>
-															        <div th:if="${param.logout}">
-															            You have been logged out.
-															        </div>
+
 															        </td>
 														</tr>
 													</tbody>
@@ -164,6 +159,15 @@
 											<td style="vertical-align: top;" align="left"><table
 													class="contacts-ListRow td" cellspacing="0" cellpadding="0">
 													<tbody>
+																											<div th:if="${param.keySet().contains('auth')}">
+																											<tr>
+																											<td>
+															 <div class="gwt-Label-Error">
+															            Invalid username and/or password.
+															  </div>
+															  </td>
+															  </tr>
+															  </div>
 														<tr>
 															<td style="vertical-align: top;" align="left">
 															<input class="gwt-Button" type="submit" value="Sign In"/>

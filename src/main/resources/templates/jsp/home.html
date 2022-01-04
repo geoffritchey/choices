@@ -1,11 +1,23 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-    <head>
-        <title>Spring Security Example</title>
-    </head>
-    <body>
-        <h1>Welcome!</h1>
+<html xmlns:th="https://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="UTF-8"/>
+    <title>Chapel Attendance Choices</title>
+    <link href="clean.css" rel="stylesheet" >
+	<link href="standard.css" rel="stylesheet" >
+	<link href="Chapel.css" rel="stylesheet" >
+</head>
+<body>
+	<div id="container">
+		<div id="header">
+			<div id="logo"></div>
+		</div>
+		<div id="content">
+    		<div id="react"></div>
+    	</div>
+    </div>
 
-        <p>Click <a th:href="@{/greeting}">here</a> to see a greeting.</p>
-    </body>
+    <script src="built/bundle.js"></script>
+
+</body>
 </html>
